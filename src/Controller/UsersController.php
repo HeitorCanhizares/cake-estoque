@@ -85,18 +85,23 @@ class UsersController extends AppController
      */
     public function add()
     {
-        $user = $this->Users->newEmptyEntity();
-        if ($this->request->is('post')) {
-            $user = $this->Users->patchEntity($user, $this->request->getData());
-            if ($this->Users->save($user)) {
-                $this->Flash->success(__('The user has been saved.'));
+        if ($result = $this->Authentication->getResult()->getData()['permissao'] == 'admin') {
+            $user = $this->Users->newEmptyEntity();
+            if ($this->request->is('post')) {
+                $user = $this->Users->patchEntity($user, $this->request->getData());
+                if ($this->Users->save($user)) {
+                    $this->Flash->success(__('The user has been saved.'));
 
-                return $this->redirect(['action' => 'index']);
+                    return $this->redirect(['action' => 'index']);
+                }
+                $this->Flash->error(__('The user could not be saved. Please, try again.'));
             }
-            $this->Flash->error(__('The user could not be saved. Please, try again.'));
+            $colaboradors = $this->Users->Colaboradors->find('list', limit: 200)->all();
+            $this->set(compact('user', 'colaboradors'));
+        } else {
+            $this->Flash->error(__('Voce não tem permissao'));
+            $this->redirect(['action' => 'index']);
         }
-        $colaboradors = $this->Users->Colaboradors->find('list', limit: 200)->all();
-        $this->set(compact('user', 'colaboradors'));
     }
 
     /**

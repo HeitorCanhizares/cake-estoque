@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Controller;
@@ -10,6 +11,46 @@ namespace App\Controller;
  */
 class UsersController extends AppController
 {
+
+    public function beforeFilter(\Cake\Event\EventInterface $event)
+    {
+        parent::beforeFilter($event);
+        // Configure the login action to not require authentication, preventing
+        // the infinite redirect loop issue
+        $this->Authentication->addUnauthenticatedActions(['login']);
+        $result = $this->Authentication->getResult();
+        if ($result && $result->isValid()) {
+            print_r($result->getData()['permissao']);
+        }
+    }
+    public function login()
+    {
+        $this->request->allowMethod(['get', 'post']);
+        $result = $this->Authentication->getResult();
+        // regardless of POST or GET, redirect if user is logged in
+        if ($result && $result->isValid()) {
+            // redirect to /articles after login success
+            $redirect = $this->request->getQuery('redirect', [
+                'controller' => 'Pages',
+                'action' => 'home',
+            ]);
+            return $this->redirect($redirect);
+        }
+        // display error if user submitted and authentication failed
+        if ($this->request->is('post') && !$result->isValid()) {
+            $this->Flash->error(__('Invalid username or password'));
+        }
+    }
+
+    public function logout()
+    {
+        $result = $this->Authentication->getResult();
+        // regardless of POST or GET, redirect if user is logged in
+        if ($result && $result->isValid()) {
+            $this->Authentication->logout();
+            return $this->redirect(['controller' => 'Users', 'action' => 'login']);
+        }
+    }
     /**
      * Index method
      *
@@ -56,16 +97,6 @@ class UsersController extends AppController
         }
         $colaboradors = $this->Users->Colaboradors->find('list', limit: 200)->all();
         $this->set(compact('user', 'colaboradors'));
-    }
-
-    public function login()
-    {
-        if ($this->request->is('post')) {
-
-            return $this->redirect(['action' => 'index']);
-        }
-       //write login function
-       
     }
 
     /**

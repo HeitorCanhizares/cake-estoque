@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\User $user
@@ -6,45 +7,39 @@
  */
 
 
- $this->disableAutoLayout();
+$this->disableAutoLayout();
 ?>
 
 
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Bootstrap demo</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-  </head>
+</head>
+
 <body>
 
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-<div class="container"> 
-<div class="column column-80">
-    <main class="form-signin w-100 m-auto">
-        <?= $this->Form->create($user) ?>
-
-            <h1 class="h3 mb-3 fw-normal">Please sign in</h1>
-
-            <div class="form-floating">
-                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-                <label for="floatingInput">Email address</label>
-            </div>
-
-            <div class="form-floating">
-                <input type="password" class="form-control" id="floatingPassword" placeholder="Password">
-                <label for="floatingPassword">Password</label>
-            </div> 
-
-        <?= $this->Form->button(__('Submit'), ['class' => 'btn btn-primary w-100 py-2'] ) ?>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <div class="users form">
+        <?= $this->Flash->render() ?>
+        <h3>Login</h3>
+        <?= $this->Form->create() ?>
+        <fieldset>
+            <legend><?= __('Please enter your username and password') ?></legend>
+            <?= $this->Form->control('login', ['required' => true]) ?>
+            <?= $this->Form->control('password', ['required' => true]) ?>
+        </fieldset>
+        <?= $this->Form->submit(__('Login')); ?>
         <?= $this->Form->end() ?>
-    </main>    
-</div>
-</div>
+        <?= $this->Html->link("Add User", ['action' => 'add']) ?>
+    </div>
 </body>
+
 </html>
 
 

@@ -1,9 +1,11 @@
 <?php
+
 declare(strict_types=1);
 
 namespace App\Model\Entity;
 
 use Cake\ORM\Entity;
+use Authentication\PasswordHasher\DefaultPasswordHasher;
 
 /**
  * User Entity
@@ -49,4 +51,18 @@ class User extends Entity
     protected array $_hidden = [
         'password',
     ];
+
+    /**
+     * Método para hashear a senha antes de salvar
+     *
+     * @param string $password Senha em texto puro
+     * @return string|null Senha hasheada ou null se a senha estiver vazia
+     */
+    protected function _setPassword(string $password): ?string
+    {
+        if (strlen($password) > 0) {
+            return (new DefaultPasswordHasher())->hash($password);
+        }
+        return null;
+    }
 }
